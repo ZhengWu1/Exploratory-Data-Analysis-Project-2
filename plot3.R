@@ -1,0 +1,11 @@
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+BC <- subset(NEI, fips == "24510")
+library(dplyr)
+groupedBC <- group_by(BC, year, type)
+sumDf <- summarize(groupedBC, sum(Emissions))
+library(ggplot2)
+names(sumDf)[3] <- "total"
+png(filename = "./plot3.png")
+ggplot(sumDf, aes(year, total)) + geom_line(aes(color = type), lwd = 2) + geom_point(pch = 19) + scale_x_discrete(breaks = c(1999, 2002, 2005, 2008)) + coord_cartesian(xlim=c(1998, 2009)) + ylab("Total Emission From PM 2.5 ")
+dev.off()
